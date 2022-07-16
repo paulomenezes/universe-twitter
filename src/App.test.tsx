@@ -1,44 +1,73 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 
 import { App } from './App';
+import { fetchMock } from './util/fetch-mock';
 
 describe('<App />', () => {
-  it('should render home page', () => {
-    render(
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    );
+  beforeEach(() => {
+    const MOCK_DATA = [
+      {
+        userId: 1,
+        id: 1,
+        title: 'Post title 1',
+        body: 'Post body',
+      },
+    ];
 
-    const linkElement = screen.getByText(/Home Page/i);
-    expect(linkElement).toBeInTheDocument();
+    fetchMock(MOCK_DATA);
   });
 
-  it('should navigate to detail page', () => {
+  it('should render home page', async () => {
     render(
       <BrowserRouter>
         <App />
       </BrowserRouter>
     );
 
-    const detailPageLink = screen.getByText(/Detail page link/i);
+    const linkElement = await waitFor(() => screen.getByText(/Posts/i));
+    expect(linkElement).toBeInTheDocument();
+
+    const detailPageLink = await waitFor(() => screen.getByText(/Post title/i));
+    expect(detailPageLink).toBeInTheDocument();
+  });
+
+  it('should navigate to detail page', async () => {
+    render(
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    );
+
+    const detailPageLink = await waitFor(() => screen.getByText(/Post title/i));
     expect(detailPageLink).toBeInTheDocument();
 
     fireEvent.click(detailPageLink);
 
-    const titlePage = screen.getByText(/Detail Page/i);
+    const titlePage = await waitFor(() => screen.getByText(/Detail Page/i));
     expect(titlePage).toBeInTheDocument();
   });
 
-  it('should have a fixed header', () => {
+  it('should have a fixed header', async () => {
     render(
       <BrowserRouter>
         <App />
       </BrowserRouter>
     );
 
-    const header = screen.getByRole('navigation');
+    const header = await waitFor(() => screen.getByRole('navigation'));
+
+    expect(header).toBeInTheDocument();
+  });
+
+  it('should navigate to home when click on logo', async () => {
+    render(
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    );
+
+    const header = await waitFor(() => screen.getByText('Twitter'));
 
     expect(header).toBeInTheDocument();
   });

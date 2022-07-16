@@ -1,0 +1,23 @@
+a {
+  text-decoration: none;
+}
+
+article {
+  background-color: white;
+  padding: 10px;
+  border-radius: 4px;
+
+  margin-bottom: 10px;
+
+  color: black;
+}
+
+article:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+article .title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
