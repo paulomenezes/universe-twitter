@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { Post } from '../../components/Post/Post';
 import { Api } from '../../services/api';
 import { PostType } from '../../types/Post';

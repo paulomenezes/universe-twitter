@@ -9,7 +9,7 @@ export interface PostProps {
 export function Post(props: PostProps) {
   return (
     <Link to={`/i/${props.post.id}`}>
-      <article role={'article'}>
+      <article>
         <div className="title">{props.post.title}</div>
         <div>{props.post.body}</div>
       </article>

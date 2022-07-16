@@ -7,4 +7,10 @@ export class Api {
 
     return response.json();
   }
+
+  static async getPostById(id: number): Promise<PostType> {
+    const response = await fetch(`${API_URL}/posts/${id}`);
+
+    return response.json();
+  }
 }
