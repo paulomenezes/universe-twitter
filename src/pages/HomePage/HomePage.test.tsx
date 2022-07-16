@@ -1,5 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
+import { API_URL } from '../../util/constants';
 import { fetchMock } from '../../util/fetch-mock';
 
 import { HomePage } from './HomePage';
@@ -32,7 +33,7 @@ describe('<HomePage />', () => {
       },
     ];
 
-    fetchMock(MOCK_DATA);
+    fetchMock({ [`${API_URL}/posts`]: MOCK_DATA });
 
     const { getByText, getAllByText } = render(
       <BrowserRouter>

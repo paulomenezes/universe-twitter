@@ -2,10 +2,11 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import { App } from './App';
+import { API_URL } from './util/constants';
 import { fetchMock } from './util/fetch-mock';
 
 describe('<App />', () => {
-  it('should render home page', async () => {
+  it.only('should render home page', async () => {
     const MOCK_DATA = [
       {
         userId: 1,
@@ -15,7 +16,9 @@ describe('<App />', () => {
       },
     ];
 
-    fetchMock(MOCK_DATA);
+    fetchMock({
+      [`${API_URL}/posts`]: MOCK_DATA,
+    });
 
     render(
       <MemoryRouter initialEntries={['/']}>
@@ -40,7 +43,10 @@ describe('<App />', () => {
       },
     ];
 
-    fetchMock(MOCK_DATA);
+    fetchMock({
+      [`${API_URL}/posts`]: MOCK_DATA,
+      [`${API_URL}/posts/1`]: MOCK_DATA[0],
+    });
 
     render(
       <MemoryRouter initialEntries={['/']}>
@@ -50,8 +56,6 @@ describe('<App />', () => {
 
     const detailPageLink = await waitFor(() => screen.getByText(/Post title/i));
     expect(detailPageLink).toBeInTheDocument();
-
-    fetchMock(MOCK_DATA[0]);
 
     fireEvent.click(detailPageLink);
 
@@ -72,7 +76,9 @@ describe('<App />', () => {
       },
     ];
 
-    fetchMock(MOCK_DATA);
+    fetchMock({
+      [`${API_URL}/posts`]: MOCK_DATA,
+    });
 
     render(
       <MemoryRouter initialEntries={['/']}>
@@ -97,7 +103,10 @@ describe('<App />', () => {
       },
     ];
 
-    fetchMock(MOCK_DATA);
+    fetchMock({
+      [`${API_URL}/posts`]: MOCK_DATA,
+      [`${API_URL}/posts/1`]: MOCK_DATA[0],
+    });
 
     render(
       <MemoryRouter initialEntries={['/']}>
@@ -107,8 +116,6 @@ describe('<App />', () => {
 
     const detailPageLink = await waitFor(() => screen.getByText(/Post title/i));
     expect(detailPageLink).toBeInTheDocument();
-
-    fetchMock(MOCK_DATA[0]);
 
     fireEvent.click(detailPageLink);
 
