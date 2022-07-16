@@ -87,4 +87,80 @@ describe('<HomePage />', () => {
     const post = await waitFor(() => getByText(/Post title 1/i));
     expect(post).toBeInTheDocument();
   });
+
+  it('should render a message when no posts is found', async () => {
+    const MOCK_DATA: any[] = [];
+
+    fetchMock({ [`${API_URL}/posts`]: MOCK_DATA });
+
+    const { getByText } = render(
+      <BrowserRouter>
+        <HomePage />
+      </BrowserRouter>
+    );
+
+    const postsTitle = screen.getByText('Posts');
+    expect(postsTitle).toBeInTheDocument();
+
+    const posts = await waitFor(() => getByText('No posts found'));
+    expect(posts).toBeInTheDocument;
+  });
+
+  it('should render a message when no posts request fail', async () => {
+    jest.spyOn(global, 'fetch').mockImplementation(jest.fn(() => Promise.reject()) as jest.Mock);
+
+    const { getByText } = render(
+      <BrowserRouter>
+        <HomePage />
+      </BrowserRouter>
+    );
+
+    const postsTitle = screen.getByText('Posts');
+    expect(postsTitle).toBeInTheDocument();
+
+    const posts = await waitFor(() => getByText('Error while fetching posts'));
+    expect(posts).toBeInTheDocument;
+  });
+
+  it('should render a list of posts if user request fails', async () => {
+    const MOCK_DATA = [
+      {
+        userId: 1,
+        id: 1,
+        title: 'Post title 1',
+        body: 'Post body',
+      },
+      {
+        userId: 20,
+        id: 2,
+        title: 'Post title 2',
+        body: 'Post body',
+      },
+    ];
+
+    jest.spyOn(global, 'fetch').mockImplementation(
+      jest.fn((url: string) => {
+        if (url.includes('/users/')) {
+          return Promise.reject();
+        }
+
+        return Promise.resolve({ json: () => MOCK_DATA });
+      }) as jest.Mock
+    );
+
+    const { getByText, getAllByText } = render(
+      <BrowserRouter>
+        <HomePage />
+      </BrowserRouter>
+    );
+
+    const postsTitle = screen.getByText('Posts');
+    expect(postsTitle).toBeInTheDocument();
+
+    const posts = await waitFor(() => getAllByText(/Post body/i));
+    expect(posts).toHaveLength(2);
+
+    const post = await waitFor(() => getByText(/Post title 1/i));
+    expect(post).toBeInTheDocument();
+  });
 });

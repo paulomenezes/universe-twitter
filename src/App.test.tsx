@@ -93,9 +93,9 @@ describe('<App />', () => {
     });
 
     render(
-      <MemoryRouter initialEntries={['/']}>
+      <BrowserRouter>
         <App />
-      </MemoryRouter>
+      </BrowserRouter>
     );
 
     const detailPageLink = await waitFor(() => screen.getByText(/Post title/i));

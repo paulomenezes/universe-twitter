@@ -115,4 +115,53 @@ describe('<DetailPage />', () => {
     const authorPost = await waitFor(() => screen.getByText('Post body'));
     expect(authorPost).toBeInTheDocument();
   });
+
+  it('should render a message when no comments is found', async () => {
+    const MOCK_DATA_POST = {
+      userId: 1,
+      id: 1,
+      title: 'Post title',
+      body: 'Post body',
+    };
+
+    fetchMock({
+      [`${API_URL}/posts/1`]: MOCK_DATA_POST,
+      [`${API_URL}/posts/1/comments`]: [],
+    });
+
+    const { getByText } = render(
+      <MemoryRouter initialEntries={['/i/1']}>
+        <Routes>
+          <Route path="/i/:id" element={<DetailPage />} />
+        </Routes>
+      </MemoryRouter>
+    );
+
+    const postsTitle = screen.getByText('Post');
+    expect(postsTitle).toBeInTheDocument();
+
+    const posts = await waitFor(() => getByText('No comments found'));
+    expect(posts).toBeInTheDocument;
+  });
+
+  it('should render a message when post and comments request fail', async () => {
+    jest.spyOn(global, 'fetch').mockImplementation(jest.fn(() => Promise.reject()) as jest.Mock);
+
+    const { getByText } = render(
+      <MemoryRouter initialEntries={['/i/1']}>
+        <Routes>
+          <Route path="/i/:id" element={<DetailPage />} />
+        </Routes>
+      </MemoryRouter>
+    );
+
+    const postsTitle = screen.getByText('Post');
+    expect(postsTitle).toBeInTheDocument();
+
+    const posts = await waitFor(() => getByText('Error while fetching post'));
+    expect(posts).toBeInTheDocument;
+
+    const comments = await waitFor(() => getByText('Error while fetching comments'));
+    expect(comments).toBeInTheDocument;
+  });
 });
