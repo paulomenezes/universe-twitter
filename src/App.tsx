@@ -1,16 +1,21 @@
 import { Route, Routes } from 'react-router-dom';
 
 import './App.css';
+import { Navigation } from './components/Navigation';
 import { DetailPage } from './pages/DetailPage/DetailPage';
 import { HomePage } from './pages/HomePage/HomePage';
 
 export function App() {
   return (
     <div>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/i/:id" element={<DetailPage />} />
-      </Routes>
+      <Navigation />
+
+      <main className="container">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/i/:id" element={<DetailPage />} />
+        </Routes>
+      </main>
     </div>
   );
 }

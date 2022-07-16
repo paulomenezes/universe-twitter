@@ -30,4 +30,16 @@ describe('<App />', () => {
     const titlePage = screen.getByText(/Detail Page/i);
     expect(titlePage).toBeInTheDocument();
   });
+
+  it('should have a fixed header', () => {
+    render(
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    );
+
+    const header = screen.getByRole('navigation');
+
+    expect(header).toBeInTheDocument();
+  });
 });
