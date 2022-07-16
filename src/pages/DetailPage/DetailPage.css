@@ -1,0 +1,21 @@
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.detail-header button {
+  background-color: cornflowerblue;
+  border: none;
+
+  padding: 5px 10px;
+  border-radius: 5px;
+
+  color: white;
+
+  cursor: pointer;
+}
+
+.detail-header button:hover {
+  background-color: #00bcd4;
+}
